@@ -1,0 +1,58 @@
+import autos.*
+import dependecia.*
+import pedidos.*
+
+
+
+
+describe "test con dos dependencias" {
+  const deportes = new Dependencia (cantidadEmpleados=45)
+  const cultura = new Dependencia(cantidadEmpleados=31)
+  //deportes
+  const cachito = new Corsa(color= "rojo")
+  const corsaAzul = new Corsa(color = "azul")
+  const corsaVerde = new Corsa(color="verde")
+  const kwidTanque = new Kwid(tieneTanqueAdicional=true)
+  const autoE = new AutosEspeciales(capacidad=5, velocidadMaxima=160, peso=1200, color="beige")
+  //cultura
+  const kwid1 = new Kwid (tieneTanqueAdicional=true)
+  const kwid2 = new Kwid (tieneTanqueAdicional=true)
+  const kwid3 = new Kwid (tieneTanqueAdicional=false)
+  method initialize(){
+    trafic.interior(popular)
+    trafic.motor(baraton)
+    deportes.agregarMuchosAFlota([cachito,corsaAzul,corsaVerde,kwidTanque,autoE])
+    cultura.agregarMuchosAFlota([cachito,kwid1,kwid2,kwid3,trafic])
+  }
+  test "Flota deportes" {
+    assert.equals(6450, deportes.pesoTotalFlota())
+    assert.that(deportes.estaBienEquipada())
+    assert.equals(7, deportes.capacidadTotalEnColor("azul"))
+    assert.equals("beige", deportes.colorDelRodadoMasRapido())
+    assert.that(deportes.esGrande())
+    assert.equals(25, deportes.capacidadFaltante())
+  }
+
+  test "Flota cultura" {
+    assert.equals(10700, cultura.pesoTotalFlota())
+    assert.notThat(cultura.estaBienEquipada())
+    assert.equals(10, cultura.capacidadTotalEnColor("azul"))
+    assert.equals("rojo", cultura.colorDelRodadoMasRapido())
+    assert.notThat(cultura.esGrande())
+    assert.equals(5, cultura.capacidadFaltante())
+  }
+}
+describe "test modelo de pedidos" {
+  const cachito = new Corsa (color ="rojo")
+  const pedido1 = new Pedidos(distanciaEnKm=960,tiempoMaximoEnHr=8,cantidadDePasajeros=4,coloresIncompatibles=["azul","negro"])
+  const pedido2 = new Pedidos(distanciaEnKm=960,tiempoMaximoEnHr=8,cantidadDePasajeros=6,coloresIncompatibles=["azul","negro"])
+  const pedido3 = new Pedidos(distanciaEnKm=960,tiempoMaximoEnHr=6,cantidadDePasajeros=4,coloresIncompatibles=["azul","negro"])
+  
+
+  test "pedidos de cachito" {
+    assert.that(pedido1.autoSatifacerPedido(cachito))
+    assert.notThat(pedido2.autoSatifacerPedido(cachito))
+    assert.notThat(pedido3.autoSatifacerPedido(cachito))
+
+  }
+}
